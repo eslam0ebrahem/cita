@@ -1,0 +1,17 @@
+GET /ctac_cita/cita/muestraHoras?idServicio=3734&idGrupo=1362&dateStr=26%2F05%2F2026&tiempoCita=20&_=1767645477384 HTTP/1.1
+Host: gestiona.comunidad.madrid
+Cookie: srv_id=b1e3a22d4e9e59eebaa5b1e8f80cba3b; srv_id=b1e3a22d4e9e59eebaa5b1e8f80cba3b; TS01907bba=016ce491daef94a097328fad320438c273fe78647dee783634065c6dbda9f5985f67b2de331f594270d159f6a2f6438d182b02459b; JSESSIONID=ADD115BFC599C59D0F0EAEB434326226.p17633304; _pk_id.165.56b1=2519bf239edf1bd7.1767642752.; _pk_ses.165.56b1=1; srv_id=abb43b160db18271d811e05bb983ca0a; TS017d34da=0119867edc90b164b9ea86d56fe67470ab703b9e3149562e6ca2662258cdde25df202304617daf6a32581401e9334e6f2c2fdfe2f9; TS018f9923=0119867edc90b164b9ea86d56fe67470ab703b9e3149562e6ca2662258cdde25df202304617daf6a32581401e9334e6f2c2fdfe2f9
+Sec-Ch-Ua-Platform: "macOS"
+X-Requested-With: XMLHttpRequest
+Accept-Language: en-US,en;q=0.9
+Accept: application/json, text/javascript, */*; q=0.01
+Sec-Ch-Ua: "Not=A?Brand";v="24", "Chromium";v="140"
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Sec-Ch-Ua-Mobile: ?0
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://gestiona.comunidad.madrid/ctac_cita/registro
+Accept-Encoding: gzip, deflate, br
+Priority: u=1, i
+Connection: keep-alive

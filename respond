@@ -1,0 +1,15 @@
+HTTP/1.1 200 OK
+Date: Mon, 05 Jan 2026 20:47:06 GMT
+Content-Type: application/json;charset=UTF-8
+Connection: keep-alive
+Set-Cookie: srv_id=b1e3a22d4e9e59eebaa5b1e8f80cba3b; expires=Mon, 05-Jan-26 21:47:06 GMT; max-age=3600; domain=gestiona.comunidad.madrid; httponly; secure
+Strict-Transport-Security: max-age=0
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Set-Cookie: TS017d34da=016ce491daf5cfdccfe633ab5916e6bc235136e94196aac96ba9d97b68ad1ad3667b85a4fe94b72aa2c0ad3802e62c63ee2f0d9acf; Path=/; Secure; HttpOnly; SameSite=Strict; 
+Set-Cookie: TS018f9923=016ce491daf5cfdccfe633ab5916e6bc235136e94196aac96ba9d97b68ad1ad3667b85a4fe94b72aa2c0ad3802e62c63ee2f0d9acf; path=/; domain=gestiona.comunidad.madrid
+Strict-Transport-Security: max-age=31536000; includeSubdomains; preload
+Content-Length: 2126
+
+{"valoresComboHoras":[{"fechaAsDate":1779778800000,"fechaAsString":"09:00","fechaAsMilis":1779778800000,"hour":9},{"fechaAsDate":1779782400000,"fechaAsString":"10:00","fechaAsMilis":1779782400000,"hour":10},{"fechaAsDate":1779786000000,"fechaAsString":"11:00","fechaAsMilis":1779786000000,"hour":11},{"fechaAsDate":1779789600000,"fechaAsString":"12:00","fechaAsMilis":1779789600000,"hour":12}],"valoresComboRangosHorasFin":[{"fechaAsDate":1779782400000,"fechaAsString":"10:00","fechaAsMilis":1779782400000,"hour":10},{"fechaAsDate":1779783600000,"fechaAsString":"10:20","fechaAsMilis":1779783600000,"hour":10},{"fechaAsDate":1779784800000,"fechaAsString":"10:40","fechaAsMilis":1779784800000,"hour":10},{"fechaAsDate":1779786000000,"fechaAsString":"11:00","fechaAsMilis":1779786000000,"hour":11},{"fechaAsDate":1779787200000,"fechaAsString":"11:20","fechaAsMilis":1779787200000,"hour":11},{"fechaAsDate":1779788400000,"fechaAsString":"11:40","fechaAsMilis":1779788400000,"hour":11},{"fechaAsDate":1779789600000,"fechaAsString":"12:00","fechaAsMilis":1779789600000,"hour":12},{"fechaAsDate":1779790800000,"fechaAsString":"12:20","fechaAsMilis":1779790800000,"hour":12},{"fechaAsDate":1779792000000,"fechaAsString":"12:40","fechaAsMilis":1779792000000,"hour":12}],"valoresComboRangosHoras":[{"fechaAsDate":1779781200000,"fechaAsString":"09:40","fechaAsMilis":1779781200000,"hour":9},{"fechaAsDate":1779782400000,"fechaAsString":"10:00","fechaAsMilis":1779782400000,"hour":10},{"fechaAsDate":1779783600000,"fechaAsString":"10:20","fechaAsMilis":1779783600000,"hour":10},{"fechaAsDate":1779784800000,"fechaAsString":"10:40","fechaAsMilis":1779784800000,"hour":10},{"fechaAsDate":1779786000000,"fechaAsString":"11:00","fechaAsMilis":1779786000000,"hour":11},{"fechaAsDate":1779787200000,"fechaAsString":"11:20","fechaAsMilis":1779787200000,"hour":11},{"fechaAsDate":1779788400000,"fechaAsString":"11:40","fechaAsMilis":1779788400000,"hour":11},{"fechaAsDate":1779789600000,"fechaAsString":"12:00","fechaAsMilis":1779789600000,"hour":12},{"fechaAsDate":1779790800000,"fechaAsString":"12:20","fechaAsMilis":1779790800000,"hour":12}]}
