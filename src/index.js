@@ -123,3 +123,17 @@ checkAll();
 setInterval(checkAll, 300000);
 
 console.log('Cita checker started (Interval: 5 mins). Press Ctrl+C to exit.');
+
+// --- WEB SERVER FOR RENDER HEALTH CHECKS ---
+const http = require('http');
+const PORT = process.env.PORT || 3000;
+
+const server = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Cita Checker is running.\n');
+});
+
+server.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
+});
+

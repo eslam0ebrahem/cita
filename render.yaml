@@ -1,5 +1,5 @@
 services:
-  - type: worker
+  - type: web
     name: cita-checker
     env: docker
     plan: free
