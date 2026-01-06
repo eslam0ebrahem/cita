@@ -32,6 +32,16 @@ class ApiService {
         const url = `${BASE_URL}?idServicio=${ID_SERVICIO}&idGrupo=${ID_GRUPO}&dateStr=${encodedDate}&tiempoCita=${TIEMPO_CITA}&_=${timestamp}`;
 
         try {
+            // --- SIMULATION MODE ---
+            if (process.env.SIMULATE === 'true') {
+                logger.info('⚠️ SIMULATION MODE: Returning fake success response');
+                // Mimic the response from the 'respond' file
+                return [
+                    { "fechaAsDate": 1779778800000, "fechaAsString": "09:00", "fechaAsMilis": 1779778800000, "hour": 9 },
+                    { "fechaAsDate": 1779782400000, "fechaAsString": "10:00", "fechaAsMilis": 1779782400000, "hour": 10 }
+                ];
+            }
+
             const response = await axios.get(url, {
                 headers: HEADERS,
                 timeout: 10000 // 10s timeout

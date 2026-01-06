@@ -6,7 +6,7 @@ const telegramService = require('./services/telegram');
 
 // --- CONFIGURATION ---
 const CHECK_INTERVAL_MS = parseInt(process.env.CHECK_INTERVAL_MS) || 5 * 60 * 1000; // Default 5 mins
-const TARGET_MONTH = parseInt(process.env.TARGET_MONTH) || 1; // Default 1 (February)
+const TARGET_MONTH = parseInt(process.env.TARGET_MONTH) || 2; // Default 1 (February)
 const PORT = process.env.PORT || 3000;
 const ENABLE_HEARTBEAT = process.env.ENABLE_HEARTBEAT === 'true';
 
