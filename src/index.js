@@ -6,7 +6,7 @@ const telegramService = require('./services/telegram');
 
 // --- CONFIGURATION ---
 const CHECK_INTERVAL_MS = parseInt(process.env.CHECK_INTERVAL_MS) || 5 * 60 * 1000; // Default 5 mins
-const TARGET_MONTH = parseInt(process.env.TARGET_MONTH) || 0; // Default 0 (January)
+const TARGET_MONTH = parseInt(process.env.TARGET_MONTH) || 1; // Default 1 (February)
 const PORT = process.env.PORT || 3000;
 const ENABLE_HEARTBEAT = process.env.ENABLE_HEARTBEAT === 'true';
 
@@ -25,7 +25,9 @@ function getDatesUntilEndOfMonth(targetMonthIndex) {
     const current = new Date(now);
     current.setDate(current.getDate() + 1);
 
-    while (current.getMonth() === targetMonthIndex && current.getFullYear() === now.getFullYear()) {
+    // Loop until we pass the target month (handling same year for simplicity as per requirement)
+    // This allows checking Jan AND Feb if we are in Jan and target is Feb.
+    while (current.getMonth() <= targetMonthIndex && current.getFullYear() === now.getFullYear()) {
         const day = String(current.getDate()).padStart(2, '0');
         const month = String(current.getMonth() + 1).padStart(2, '0');
         const year = current.getFullYear();
@@ -47,7 +49,7 @@ async function checkAll() {
     const dates = getDatesUntilEndOfMonth(TARGET_MONTH);
 
     if (dates.length === 0) {
-        logger.info(`No dates remaining in month index ${TARGET_MONTH} to check.`);
+        logger.info(`No dates remaining up to month index ${TARGET_MONTH} to check.`);
         isRunning = false;
         return;
     }
