@@ -26,7 +26,7 @@ TELEGRAM_CHAT_ID=123456789
 
 # Optional
 CHECK_INTERVAL_MS=300000       # Interval in ms (Default: 5 mins)
-TARGET_MONTH=1                 # Index of target month (0=Jan, 1=Feb, 2=Mar). Check runs until end of this month.
+TARGET_DATE_LIMIT=15/02/2026   # Check all dates from TOMORROW up to THIS date (inclusive).
 ENABLE_HEARTBEAT=true          # Send start-up message? (true/false)
 SIMULATE=false                 # Enable "Simulated" mode for testing (no real API calls)
 LOG_LEVEL=info                 # debug, info, warn, error

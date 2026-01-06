@@ -18,7 +18,9 @@ module.exports = {
     app: {
         port: getInt('PORT', 3000),
         checkIntervalMs: getInt('CHECK_INTERVAL_MS', 5 * 60 * 1000), // 5 minutes
-        targetMonth: getInt('TARGET_MONTH', 1), // Default Feb (index 1)
+        // Target Date Limit (Format: DD/MM/YYYY) e.g., "15/02/2026"
+        // Checks all dates from tomorrow up to and including this date.
+        targetDateLimit: process.env.TARGET_DATE_LIMIT || null,
         enableHeartbeat: getBool('ENABLE_HEARTBEAT', false),
         renderExternalUrl: process.env.RENDER_EXTERNAL_URL,
         simulate: getBool('SIMULATE', false),

@@ -17,8 +17,8 @@ class AppointmentChecker {
             telegramService.sendMessage(
                 `🤖 <b>Cita Checker Started</b>\n` +
                 `Check Interval: ${config.app.checkIntervalMs / 1000}s\n` +
-                `Target Month Index: ${config.app.targetMonth}\n` +
-                `Version: 3.0.0 (Enhanced)`
+                `Checking Until: ${config.app.targetDateLimit || 'Next 30 Days'}\n` +
+                `Version: 3.1.0`
             );
         }
 
@@ -50,7 +50,7 @@ class AppointmentChecker {
             const dates = this._getDatesCheckList();
 
             if (dates.length === 0) {
-                logger.info(`No dates remaining up to month index ${config.app.targetMonth} to check.`);
+                logger.info(`No dates remaining to check before ${config.app.targetDateLimit}.`);
                 return;
             }
 
@@ -105,9 +105,24 @@ class AppointmentChecker {
         const current = new Date(now);
         current.setDate(current.getDate() + 1); // Start tomorrow
 
-        const targetMonthIndex = config.app.targetMonth;
+        // Parse Target Limit
+        let limitDate = null;
+        if (config.app.targetDateLimit) {
+            const [day, month, year] = config.app.targetDateLimit.split('/').map(Number);
+            if (day && month && year) {
+                limitDate = new Date(year, month - 1, day);
+                limitDate.setHours(23, 59, 59, 999); // End of that day
+            }
+        }
 
-        while (current.getMonth() <= targetMonthIndex && current.getFullYear() === now.getFullYear()) {
+        // Safety fallback: if no limit is set, default to 30 days from now to avoid infinite loops
+        if (!limitDate) {
+            limitDate = new Date(now);
+            limitDate.setDate(limitDate.getDate() + 30);
+            logger.warn('No valid TARGET_DATE_LIMIT set. Defaulting to 30 days check range.');
+        }
+
+        while (current <= limitDate) {
             const day = String(current.getDate()).padStart(2, '0');
             const month = String(current.getMonth() + 1).padStart(2, '0');
             const year = current.getFullYear();
