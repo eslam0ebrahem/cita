@@ -128,3 +128,24 @@ process.on('SIGTERM', () => {
         process.exit(0);
     });
 });
+
+// --- KEEP ALIVE (SELF PING) ---
+// Render free tier spins down after 15 mins of inactivity.
+// We ping ourselves every 5 minutes to stay awake.
+const RENDER_EXTERNAL_URL = process.env.RENDER_EXTERNAL_URL;
+
+if (RENDER_EXTERNAL_URL) {
+    logger.info(`Keep-Alive enabled for: ${RENDER_EXTERNAL_URL}`);
+
+    setInterval(() => {
+        logger.info('Sending Keep-Alive ping...');
+        http.get(`${RENDER_EXTERNAL_URL}/`, (res) => {
+            logger.info(`Keep-Alive ping sent. Status: ${res.statusCode}`);
+        }).on('error', (err) => {
+            logger.error(`Keep-Alive ping failed: ${err.message}`);
+        });
+    }, 5 * 60 * 1000); // 5 minutes
+} else {
+    logger.warn('RENDER_EXTERNAL_URL not set. Keep-Alive disabled.');
+}
+
