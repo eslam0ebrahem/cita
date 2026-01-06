@@ -34,9 +34,11 @@ async function bootstrap() {
     // Keep-Alive Logic
     if (config.app.renderExternalUrl) {
         logger.info(`Keep-Alive enabled for: ${config.app.renderExternalUrl}`);
+        const protocol = config.app.renderExternalUrl.startsWith('https') ? require('https') : require('http');
+
         setInterval(() => {
             logger.info('Sending Keep-Alive ping...');
-            http.get(`${config.app.renderExternalUrl}/`, (res) => {
+            protocol.get(`${config.app.renderExternalUrl}/`, (res) => {
                 logger.info(`Keep-Alive ping sent. Status: ${res.statusCode}`);
             }).on('error', (err) => {
                 logger.error(`Keep-Alive ping failed: ${err.message}`);
