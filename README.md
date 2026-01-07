@@ -30,11 +30,6 @@ TARGET_DATE_LIMIT=15/02/2026   # Check all dates from TOMORROW up to THIS date (
 ENABLE_HEARTBEAT=true          # Send start-up message? (true/false)
 SIMULATE=false                 # Enable "Simulated" mode for testing (no real API calls)
 LOG_LEVEL=info                 # debug, info, warn, error
-
-# Secondary Check (Sede) - Optional
-SEDE_ENABLED=true
-SEDE_COOKIE="JSESSIONID=...; TS01e7a224=..."  # Copy full Cookie string from browser
-SEDE_BODY="d93d72aa...=...&..."               # Copy full Form Data body from browser
 ```
 
 ### Installation
