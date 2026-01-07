@@ -45,5 +45,21 @@ module.exports = {
             'Accept-Language': 'en-US,en;q=0.9',
             'Connection': 'keep-alive'
         }
+    },
+    // Second system (Sede)
+    apiSede: {
+        enabled: getBool('SEDE_ENABLED', false),
+        url: 'https://sede.administracionespublicas.gob.es/icpplustiej/acCitar',
+        body: process.env.SEDE_BODY || '', // Raw body string
+        headers: {
+            'Host': 'sede.administracionespublicas.gob.es',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',
+            'Cookie': process.env.SEDE_COOKIE || '',
+            'Referer': 'https://sede.administracionespublicas.gob.es/icpplustiej/acValidarEntrada',
+            'Origin': 'https://sede.administracionespublicas.gob.es',
+            'Upgrade-Insecure-Requests': '1',
+            'Cache-Control': 'max-age=0'
+        }
     }
 };
