@@ -1,6 +1,7 @@
 const https = require('https');
 const axios = require('axios');
-const { wrapper } = require('axios-cookiejar-support');
+// Removed synchronous require for axios-cookiejar-support to avoid ESM error
+// const { wrapper } = require('axios-cookiejar-support'); 
 const { CookieJar } = require('tough-cookie');
 const logger = require('../utils/logger');
 const config = require('../config');
@@ -17,6 +18,9 @@ class AlicanteApiService {
                 logger.info('⚠️ SIMULATION MODE (Alicante): Returning fake found date');
                 return ['15/02/2026', '16/02/2026'];
             }
+
+            // Dynamically import wrapper because axios-cookiejar-support is an ES Module
+            const { wrapper } = await import('axios-cookiejar-support');
 
             // Create an HTTPS agent that ignores self-signed certificates
             const httpsAgent = new https.Agent({
