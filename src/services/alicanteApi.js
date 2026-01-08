@@ -1,8 +1,5 @@
 const https = require('https');
 const axios = require('axios');
-// Removed synchronous require for axios-cookiejar-support to avoid ESM error
-// const { wrapper } = require('axios-cookiejar-support'); 
-const { CookieJar } = require('tough-cookie');
 const logger = require('../utils/logger');
 const config = require('../config');
 
