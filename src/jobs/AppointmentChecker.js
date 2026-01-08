@@ -1,5 +1,6 @@
 const logger = require('../utils/logger');
 const config = require('../config');
+const telegramService = require('../services/telegram');
 const alicanteApiService = require('../services/alicanteApi');
 
 class AppointmentChecker {
