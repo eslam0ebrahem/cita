@@ -29,12 +29,16 @@ class AlicanteApiService {
 
             // Setup Cookie Jar to handle redirects properly
             const jar = new CookieJar();
-            const client = wrapper(axios.create({ jar }));
+
+            // Pass the agent directly to the create method so the wrapper handles it
+            const client = wrapper(axios.create({
+                jar,
+                httpsAgent: httpsAgent
+            }));
 
             const response = await client.get(url, {
                 headers: headers,
-                timeout: 60000,
-                httpsAgent: httpsAgent
+                timeout: 60000
             });
 
             const html = response.data;
