@@ -1,3 +1,4 @@
+const https = require('https');
 const axios = require('axios');
 const logger = require('../utils/logger');
 const config = require('../config');
@@ -15,14 +16,15 @@ class AlicanteApiService {
                 return ['15/02/2026', '16/02/2026'];
             }
 
-            // If we need a cookie/session ID, we might need to add it here.
-            // For now, based on user request, we try without specific session or rely on headers.
-            // If the user provided a specific cookie in the request file, we might need to add it to env if strict.
-            // However, often these pages generate a session on first visit.
+            // Create an HTTPS agent that ignores self-signed certificates (common issue with some gov sites)
+            const httpsAgent = new https.Agent({
+                rejectUnauthorized: false
+            });
 
             const response = await axios.get(url, {
                 headers: headers,
-                timeout: 15000
+                timeout: 15000,
+                httpsAgent: httpsAgent
             });
 
             const html = response.data;
