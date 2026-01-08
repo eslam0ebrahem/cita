@@ -1,5 +1,7 @@
 const https = require('https');
 const axios = require('axios');
+const { wrapper } = require('axios-cookiejar-support');
+const { CookieJar } = require('tough-cookie');
 const logger = require('../utils/logger');
 const config = require('../config');
 
@@ -16,12 +18,16 @@ class AlicanteApiService {
                 return ['15/02/2026', '16/02/2026'];
             }
 
-            // Create an HTTPS agent that ignores self-signed certificates (common issue with some gov sites)
+            // Create an HTTPS agent that ignores self-signed certificates
             const httpsAgent = new https.Agent({
                 rejectUnauthorized: false
             });
 
-            const response = await axios.get(url, {
+            // Setup Cookie Jar to handle redirects properly
+            const jar = new CookieJar();
+            const client = wrapper(axios.create({ jar }));
+
+            const response = await client.get(url, {
                 headers: headers,
                 timeout: 60000,
                 httpsAgent: httpsAgent
