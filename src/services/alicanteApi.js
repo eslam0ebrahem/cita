@@ -23,7 +23,7 @@ class AlicanteApiService {
 
             const response = await axios.get(url, {
                 headers: headers,
-                timeout: 15000,
+                timeout: 60000,
                 httpsAgent: httpsAgent
             });
 
