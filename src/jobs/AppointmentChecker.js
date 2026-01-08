@@ -1,7 +1,6 @@
 const logger = require('../utils/logger');
 const config = require('../config');
-const apiService = require('../services/api');
-const telegramService = require('../services/telegram');
+const alicanteApiService = require('../services/alicanteApi');
 
 class AppointmentChecker {
     constructor() {
@@ -17,8 +16,9 @@ class AppointmentChecker {
             telegramService.sendMessage(
                 `🤖 <b>Cita Checker Started</b>\n` +
                 `Check Interval: ${config.app.checkIntervalMs / 1000}s\n` +
-                `Checking Until: ${config.app.targetDateLimit || 'Next 30 Days'}\n` +
-                `Version: 3.1.0`
+                `Madrid Enabled: ${config.app.enableMadrid}\n` +
+                `Alicante Enabled: ${config.app.enableAlicante}\n` +
+                `Version: 3.2.0 (Multi-City)`
             );
         }
 
@@ -47,22 +47,18 @@ class AppointmentChecker {
         logger.info('Starting batch check...');
 
         try {
-            const dates = this._getDatesCheckList();
-
-            if (dates.length === 0) {
-                logger.info(`No dates remaining to check before ${config.app.targetDateLimit}.`);
-                return;
+            // 1. Check Madrid
+            if (config.app.enableMadrid) {
+                await this._checkMadrid();
+            } else {
+                logger.info('Madrid check disabled.');
             }
 
-            logger.info(`Checking ${dates.length} dates: ${dates[0]} to ${dates[dates.length - 1]}`);
-
-            for (const date of dates) {
-                if (!this.isRunning) break; // Allow early exit if stopped
-
-                await this._checkSingleDate(date);
-
-                // Random polite delay
-                await this._delay(1000 + Math.random() * 2000);
+            // 2. Check Alicante
+            if (config.app.enableAlicante) {
+                await this._checkAlicante();
+            } else {
+                logger.info('Alicante check disabled.');
             }
 
             this.lastSuccessfulRun = new Date();
@@ -75,14 +71,48 @@ class AppointmentChecker {
         }
     }
 
-    async _checkSingleDate(date) {
+    async _checkAlicante() {
+        logger.info('>>> Starting Alicante Check <<<');
+        const dates = await alicanteApiService.checkAppointments();
+        if (dates && dates.length > 0) {
+            const dateStr = dates.join(', ');
+            logger.info(`>>> ALICANTE: FOUND SLOTS: ${dateStr} <<<`);
+            const message = `🚨 <b>ALICANTE CITA FOUND!</b> 🚨\n\nDates: ${dateStr}\n\n<a href="${config.alicante.url}">Book Now</a>`;
+            await telegramService.sendMessage(message);
+        } else {
+            logger.info('Alicante: No slots found.');
+        }
+    }
+
+    async _checkMadrid() {
+        logger.info('>>> Starting Madrid Check <<<');
+        const dates = this._getDatesCheckList();
+
+        if (dates.length === 0) {
+            logger.info(`Madrid: No dates remaining to check before ${config.app.targetDateLimit}.`);
+            return;
+        }
+
+        logger.info(`Madrid: Checking ${dates.length} dates.`);
+
+        for (const date of dates) {
+            if (!this.isRunning) break;
+
+            await this._checkSingleDateMadrid(date);
+
+            // Random polite delay
+            await this._delay(1000 + Math.random() * 2000);
+        }
+    }
+
+    async _checkSingleDateMadrid(date) {
         try {
             const result = await apiService.checkDate(date);
 
             if (result) {
-                logger.info(`>>> FOUND SLOTS ON ${date} <<<`);
+                logger.info(`>>> MADRID: FOUND SLOTS ON ${date} <<<`);
                 const slots = result.map(slot => slot.fechaAsString).join(', ');
-                const message = `🚨 <b>CITA FOUND for ${date}!</b> 🚨\n\nSlots: ${slots}\n\n<a href="https://gestiona.comunidad.madrid/ctac_cita/registro">Book Now</a>`;
+                const message = `🚨 <b>MADRID CITA FOUND for ${date}!</b> 🚨\n\nSlots: ${slots}\n\n<a href="https://gestiona.comunidad.madrid/ctac_cita/registro">Book Now</a>`;
                 await telegramService.sendMessage(message);
             }
 
@@ -92,9 +122,10 @@ class AppointmentChecker {
             this.consecutiveErrors++;
             logger.error(`Error checking ${date}. Consecutive errors: ${this.consecutiveErrors}`);
 
+            // Only stop Madrid loop if too many errors, but don't crash whole app
             if (this.consecutiveErrors >= 5) {
-                logger.warn('Too many consecutive errors. Aborting batch check.');
-                throw new Error('Too many errors'); // Break the loop
+                logger.warn('Madrid: Too many consecutive errors. Aborting Madrid loop.');
+                throw new Error('Madrid Loop Error');
             }
         }
     }

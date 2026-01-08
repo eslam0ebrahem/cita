@@ -24,7 +24,12 @@ module.exports = {
         enableHeartbeat: getBool('ENABLE_HEARTBEAT', false),
         renderExternalUrl: process.env.RENDER_EXTERNAL_URL,
         simulate: getBool('SIMULATE', false),
+
+        // Feature Toggles
+        enableMadrid: getBool('ENABLE_MADRID', true),
+        enableAlicante: getBool('ENABLE_ALICANTE', false),
     },
+    // Madrid Configuration
     api: {
         idServicio: '3734',
         idGrupo: '1362',
@@ -35,14 +40,20 @@ module.exports = {
             'Accept': 'application/json, text/javascript, */*; q=0.01',
             'X-Requested-With': 'XMLHttpRequest',
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',
-            'Sec-Ch-Ua': '"Not=A?Brand";v="24", "Chromium";v="140"',
-            'Sec-Ch-Ua-Mobile': '?0',
-            'Sec-Ch-Ua-Platform': '"macOS"',
-            'Sec-Fetch-Site': 'same-origin',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Dest': 'empty',
             'Referer': 'https://gestiona.comunidad.madrid/ctac_cita/registro',
-            'Accept-Language': 'en-US,en;q=0.9',
+            'Connection': 'keep-alive'
+        }
+    },
+    // Alicante Configuration
+    alicante: {
+        url: 'https://santjoandalacant.sedelectronica.es/citaprevia.0',
+        headers: {
+            'Host': 'santjoandalacant.sedelectronica.es',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Site': 'none',
+            'Sec-Fetch-Mode': 'navigate',
             'Connection': 'keep-alive'
         }
     }

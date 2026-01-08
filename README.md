@@ -27,6 +27,8 @@ TELEGRAM_CHAT_ID=123456789
 # Optional
 CHECK_INTERVAL_MS=300000       # Interval in ms (Default: 5 mins)
 TARGET_DATE_LIMIT=15/02/2026   # Check all dates from TOMORROW up to THIS date (inclusive).
+ENABLE_MADRID=true             # Enable/Disable Madrid checks (Default: true)
+ENABLE_ALICANTE=false          # Enable/Disable Alicante checks (Default: false)
 ENABLE_HEARTBEAT=true          # Send start-up message? (true/false)
 SIMULATE=false                 # Enable "Simulated" mode for testing (no real API calls)
 LOG_LEVEL=info                 # debug, info, warn, error
