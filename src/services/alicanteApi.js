@@ -10,7 +10,16 @@ class AlicanteApiService {
     async checkAppointments() {
         logger.debug('Checking Alicante appointments...');
 
-        const { url, headers } = config.alicante;
+        let currentUrl = config.alicante.url;
+        const initialHeaders = config.alicante.headers;
+
+        // Store cookies as an array of strings like "key=value"
+        let cookies = [];
+
+        // Create an HTTPS agent that ignores self-signed certificates
+        const httpsAgent = new https.Agent({
+            rejectUnauthorized: false
+        });
 
         try {
             // --- SIMULATION MODE ---
@@ -19,35 +28,72 @@ class AlicanteApiService {
                 return ['15/02/2026', '16/02/2026'];
             }
 
-            // Dynamically import wrapper because axios-cookiejar-support is an ES Module
-            const { wrapper } = await import('axios-cookiejar-support');
+            let response;
+            let redirectCount = 0;
+            const maxRedirects = 10;
 
-            // Create an HTTPS agent that ignores self-signed certificates
-            const httpsAgent = new https.Agent({
-                rejectUnauthorized: false
-            });
+            // Manual redirect loop
+            while (redirectCount < maxRedirects) {
+                // Construct Cookie header
+                const cookieHeader = cookies.join('; ');
+                const requestHeaders = { ...initialHeaders };
+                if (cookieHeader) {
+                    requestHeaders['Cookie'] = cookieHeader;
+                }
 
-            // Setup Cookie Jar to handle redirects properly
-            const jar = new CookieJar();
+                response = await axios.get(currentUrl, {
+                    headers: requestHeaders,
+                    timeout: 60000,
+                    httpsAgent: httpsAgent,
+                    maxRedirects: 0, // Disable auto-redirect
+                    validateStatus: status => status >= 200 && status < 400 // Accept 3xx
+                });
 
-            // Pass the agent directly to the create method so the wrapper handles it
-            const client = wrapper(axios.create({
-                jar,
-                httpsAgent: httpsAgent
-            }));
+                // Extract and update cookies
+                const setCookie = response.headers['set-cookie'];
+                if (setCookie) {
+                    setCookie.forEach(cookieStr => {
+                        const cookiePart = cookieStr.split(';')[0];
+                        // Simple cookie update/add logic
+                        const cookieName = cookiePart.split('=')[0];
+                        // Remove existing cookie with same name
+                        cookies = cookies.filter(c => !c.startsWith(cookieName + '='));
+                        cookies.push(cookiePart);
+                    });
+                }
 
-            const response = await client.get(url, {
-                headers: headers,
-                timeout: 60000
-            });
+                // Check for Redirect
+                if (response.status >= 300 && response.status < 400 && response.headers.location) {
+                    redirectCount++;
+                    const location = response.headers.location;
+                    // Handle relative URLs
+                    if (location.startsWith('http')) {
+                        currentUrl = location;
+                    } else {
+                        const baseUrlObj = new URL(currentUrl);
+                        currentUrl = new URL(location, baseUrlObj.origin).toString();
+                    }
+                    logger.debug(`Alicante: Following redirect (${redirectCount}) to ${currentUrl}`);
+                    continue; // Loop again
+                }
+
+                // If 200 OK, break and parse
+                if (response.status === 200) {
+                    break;
+                }
+
+                // If other status, throw
+                throw new Error(`Unexpected status ${response.status}`);
+            }
+
+            if (redirectCount >= maxRedirects) {
+                throw new Error('Maximum redirects exceeded');
+            }
 
             const html = response.data;
 
             // Logic to find dates in the HTML
-            // Searching for pattern DD/MM/YYYY inside the specific context or just generally in the list
-            // The snippet showed: ... onclick="...">13/02/2026 - VIERNES</a>
-
-            // Regex to find dates in format DD/MM/YYYY followed by " - " which seems to be the format in the link text
+            // Regex to find dates in format DD/MM/YYYY followed by " - "
             const dateRegex = />(\d{2}\/\d{2}\/\d{4}) -/g;
             const matches = [];
             let match;
@@ -87,8 +133,6 @@ class AlicanteApiService {
             } else {
                 logger.error(`Alicante Network Error: ${error.message}`);
             }
-            // We don't throw here to avoid stopping the loop if Madrid is also running.
-            // But if this is a job component, maybe we should just log.
         }
         return null;
     }
