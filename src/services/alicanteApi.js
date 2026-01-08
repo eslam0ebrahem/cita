@@ -40,6 +40,27 @@ class AlicanteApiService {
                 matches.push(match[1]);
             }
 
+            // Filter by TARGET_DATE_LIMIT if set
+            if (config.app.targetDateLimit && matches.length > 0) {
+                const [lDay, lMonth, lYear] = config.app.targetDateLimit.split('/').map(Number);
+                const limitDate = new Date(lYear, lMonth - 1, lDay);
+                limitDate.setHours(23, 59, 59, 999);
+
+                const filteredMatches = matches.filter(dateStr => {
+                    const [dDay, dMonth, dYear] = dateStr.split('/').map(Number);
+                    const dateObj = new Date(dYear, dMonth - 1, dDay);
+                    return dateObj <= limitDate;
+                });
+
+                if (filteredMatches.length > 0) {
+                    logger.info(`Alicante: Found ${matches.length} slots, ${filteredMatches.length} within limit (${config.app.targetDateLimit})`);
+                    return filteredMatches;
+                } else {
+                    logger.info(`Alicante: Found ${matches.length} slots, but none before ${config.app.targetDateLimit}`);
+                    return null;
+                }
+            }
+
             if (matches.length > 0) {
                 return matches;
             }
